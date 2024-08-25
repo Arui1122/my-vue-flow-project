@@ -25,3 +25,41 @@ npm add @vue-flow/core
 
 npm run dev
 ```
+
+
+在 App.vue 中導入 LLMNode：
+
+``` js
+import LLMNode from './components/LLMNode.vue';
+```
+
+在 nodeTypes 中添加 LLMNode：
+``` js
+const nodeTypes = {
+  customStart: markRaw(CustomStartNode),
+  llm: markRaw(LLMNode),
+};
+```
+
+在 nodes 數組中添加一個新的 LLM 節點：
+``` js
+const nodes = ref([
+  // ... 其他節點
+  { 
+    id: '4',
+    type: 'llm', 
+    position: { x: 250, y: 200 },
+    data: { 
+      label: 'LLM Node',
+      model: 'GPT-3.5 Turbo',
+      inputs: [],
+      prompt: '',
+      outputs: [],
+    },
+  },
+]);
+```
+
+npm install @vue-flow/minimap
+npm install @vue-flow/controls
+npm install @vue-flow/background
