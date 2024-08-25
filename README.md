@@ -63,3 +63,4 @@ const nodes = ref([
 npm install @vue-flow/minimap
 npm install @vue-flow/controls
 npm install @vue-flow/background
+

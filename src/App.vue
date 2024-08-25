@@ -1,11 +1,12 @@
 <script setup>
 import { Background } from '@vue-flow/background';
 import { Controls } from '@vue-flow/controls';
-import { Panel, PanelPosition, VueFlow, useVueFlow } from '@vue-flow/core';
+import { VueFlow, useVueFlow } from '@vue-flow/core';
 import { MiniMap } from '@vue-flow/minimap';
 import { markRaw, ref } from 'vue';
 
 import LLMNode from './components/LLMNode.vue';
+import SaveRestoreControls from './components/SaveRestoreControls.vue';
 import Sidebar from './components/Sidebar.vue';
 import StartNode from './components/StartNode.vue';
 
@@ -112,17 +113,18 @@ const handleAddNode = (type) => {
 
 <template>
   <div style="width: 100vw; height: 100vh;">
-    <VueFlow v-model:nodes="nodes" v-model:edges="edges" :node-types="nodeTypes" :connect-on-click="true">
+    <VueFlow :default-viewport="{ zoom: 0.5, x: 0, y: 0 }" v-model:nodes="nodes" v-model:edges="edges" :node-types="nodeTypes" :connect-on-click="true">
       <Background pattern-color="#aaa" :gap="16" />
       <MiniMap>
       </MiniMap>
       <Controls @zoom-in="onZoomIn" @zoom-out="onZoomOut" @fit-view="onFitView" @interaction-change="onInteractionChange" />
-      <Panel :position="PanelPosition.TopRight">
+      <SaveRestoreControls />
+      <!-- <Panel :position="PanelPosition.TopRight">
         <button style="margin-right: 5px">reset transform</button>
         <button style="margin-right: 5px">change pos</button>
         <button style="margin-right: 5px">toggle class</button>
         <button>toObject</button>
-      </Panel>
+      </Panel> -->
     </VueFlow>
     <Sidebar @addNode="handleAddNode" />
   </div>
