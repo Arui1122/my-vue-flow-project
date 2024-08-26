@@ -1,4 +1,5 @@
 <script setup>
+// 導入必要的組件和函數
 import { Background } from '@vue-flow/background';
 import { Controls } from '@vue-flow/controls';
 import { VueFlow, useVueFlow } from '@vue-flow/core';
@@ -6,7 +7,7 @@ import { MiniMap } from '@vue-flow/minimap';
 import { markRaw, onMounted, ref, watch } from 'vue';
 import { useRoute } from 'vue-router';
 
-
+// 導入自定義節點組件
 import LLMNode from './components/LLMNode.vue';
 import SaveRestoreControls from './components/SaveRestoreControls.vue';
 import Sidebar from './components/Sidebar.vue';
@@ -16,14 +17,16 @@ import StartNode from './components/StartNode.vue';
 import '@vue-flow/controls/dist/style.css';
 import '@vue-flow/minimap/dist/style.css';
 
+// 獲取當前路由
 const route = useRoute();
 
+// 定義自定義節點類型
 const nodeTypes = {
   start: markRaw(StartNode),
   llm: markRaw(LLMNode),
 };
 
-// 預設節點和邊
+// 預設節點
 const defaultNodes = [
   {
     id: '1',
@@ -63,6 +66,7 @@ const defaultNodes = [
   },
 ];
 
+// 預設邊
 const defaultEdges = [
   {
     id: 'e1-2',
@@ -77,9 +81,11 @@ const defaultEdges = [
   },
 ];
 
+// 創建響應式引用
 const nodes = ref(defaultNodes);
 const edges = ref(defaultEdges);
 
+// 從 API 獲取流程數據的函數
 const fetchFlowData = async (flowId) => {
   if (flowId) {
     try {
@@ -108,6 +114,7 @@ const fetchFlowData = async (flowId) => {
   setEdges(edges.value);
 };
 
+// 組件掛載時執行
 onMounted(() => {
   console.log('Component mounted');
   const flowId = route.params.flowId;
@@ -115,6 +122,7 @@ onMounted(() => {
   fetchFlowData(flowId);
 });
 
+// 監聽路由參數變化
 watch(
   () => route.params.flowId,
   async (newFlowId) => {
@@ -123,8 +131,10 @@ watch(
   }
 );
 
+// 使用 VueFlow 鉤子
 const { onConnect, addNodes, addEdges, setNodes, setEdges } = useVueFlow();
 
+// 處理節點連接
 onConnect((params) => {
   // 當用戶手動連接兩個節點時，創建一個新的邊
   const newEdge = {
@@ -135,6 +145,7 @@ onConnect((params) => {
   edges.value.push(newEdge);
 });
 
+// 處理添加新節點
 const handleAddNode = (type) => {
   const newNode = {
     id: `${type}-${Date.now()}`,
@@ -142,7 +153,7 @@ const handleAddNode = (type) => {
     position: { x: Math.random() * 500, y: Math.random() * 500 },
     data: {
       label: `${type.charAt(0).toUpperCase() + type.slice(1)} Node`,
-      // 如果是 LLM 节点，添加特定的数据
+      // 如果是 LLM 節點，添加特定的數據
       ...(type === 'llm' ? {
         model: 'GPT-3.5 Turbo',
         inputs: [],
@@ -154,6 +165,7 @@ const handleAddNode = (type) => {
   addNodes([newNode]);
 };
 
+// 縮放和交互變化的處理函數
 const onZoomIn = () => console.log('Zoomed in');
 const onZoomOut = () => console.log('Zoomed out');
 const onFitView = () => console.log('View fitted');
@@ -169,7 +181,8 @@ const onInteractionChange = (interactionEnabled) => console.log('Interaction cha
       </MiniMap>
       <Controls @zoom-in="onZoomIn" @zoom-out="onZoomOut" @fit-view="onFitView" @interaction-change="onInteractionChange" />
       <SaveRestoreControls />
-      <!-- <Panel :position="PanelPosition.TopRight">
+      <!-- 頂部右側面板（已注釋） -->
+      <!-- <Panel :position="PanelPosition.TopRight"> 
         <button style="margin-right: 5px">reset transform</button>
         <button style="margin-right: 5px">change pos</button>
         <button style="margin-right: 5px">toggle class</button>
