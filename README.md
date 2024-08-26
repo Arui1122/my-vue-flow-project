@@ -64,3 +64,4 @@ npm install @vue-flow/minimap
 npm install @vue-flow/controls
 npm install @vue-flow/background
 
+npm install vue-router@4

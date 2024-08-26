@@ -3,7 +3,9 @@ import { Background } from '@vue-flow/background';
 import { Controls } from '@vue-flow/controls';
 import { VueFlow, useVueFlow } from '@vue-flow/core';
 import { MiniMap } from '@vue-flow/minimap';
-import { markRaw, ref } from 'vue';
+import { markRaw, onMounted, ref, watch } from 'vue';
+import { useRoute } from 'vue-router';
+
 
 import LLMNode from './components/LLMNode.vue';
 import SaveRestoreControls from './components/SaveRestoreControls.vue';
@@ -14,12 +16,15 @@ import StartNode from './components/StartNode.vue';
 import '@vue-flow/controls/dist/style.css';
 import '@vue-flow/minimap/dist/style.css';
 
+const route = useRoute();
+
 const nodeTypes = {
   start: markRaw(StartNode),
   llm: markRaw(LLMNode),
 };
 
-const nodes = ref([
+// 預設節點和邊
+const defaultNodes = [
   {
     id: '1',
     type: 'start',
@@ -56,9 +61,9 @@ const nodes = ref([
       outputs: [],
     },
   },
-]);
+];
 
-const edges = ref([
+const defaultEdges = [
   {
     id: 'e1-2',
     source: '1',
@@ -70,10 +75,55 @@ const edges = ref([
     target: '3',
     animated: true,
   },
-]);
+];
 
-const { onConnect, addNodes, addEdges } = useVueFlow();
+const nodes = ref(defaultNodes);
+const edges = ref(defaultEdges);
 
+const fetchFlowData = async (flowId) => {
+  if (flowId) {
+    try {
+      console.log('Fetching data from API...');
+      const response = await fetch(`http://localhost:5173/api/flow/${flowId}`);
+      const data = await response.json();
+      console.log('API response:', data);
+      if (data && data.nodes && data.nodes.length > 0) {
+        nodes.value = data.nodes;
+        edges.value = data.edges || [];
+        console.log('Using API data');
+      } else {
+        console.log('API returned empty data, using default data');
+      }
+    } catch (error) {
+      console.error('Error fetching flow data:', error);
+      console.log('API request failed, using default data');
+    }
+  } else {
+    console.log('No flowId provided, using default data');
+    nodes.value = defaultNodes;
+    edges.value = defaultEdges;
+  }
+  console.log('Setting nodes and edges');
+  setNodes(nodes.value);
+  setEdges(edges.value);
+};
+
+onMounted(() => {
+  console.log('Component mounted');
+  const flowId = route.params.flowId;
+  console.log('Flow ID:', flowId);
+  fetchFlowData(flowId);
+});
+
+watch(
+  () => route.params.flowId,
+  async (newFlowId) => {
+    console.log('Flow ID changed:', newFlowId);
+    fetchFlowData(newFlowId);
+  }
+);
+
+const { onConnect, addNodes, addEdges, setNodes, setEdges } = useVueFlow();
 
 onConnect((params) => {
   // 當用戶手動連接兩個節點時，創建一個新的邊
@@ -84,11 +134,6 @@ onConnect((params) => {
   };
   edges.value.push(newEdge);
 });
-
-const onZoomIn = () => console.log('Zoomed in');
-const onZoomOut = () => console.log('Zoomed out');
-const onFitView = () => console.log('View fitted');
-const onInteractionChange = (interactionEnabled) => console.log('Interaction changed:', interactionEnabled);
 
 const handleAddNode = (type) => {
   const newNode = {
@@ -108,6 +153,11 @@ const handleAddNode = (type) => {
   };
   addNodes([newNode]);
 };
+
+const onZoomIn = () => console.log('Zoomed in');
+const onZoomOut = () => console.log('Zoomed out');
+const onFitView = () => console.log('View fitted');
+const onInteractionChange = (interactionEnabled) => console.log('Interaction changed:', interactionEnabled);
 
 </script>
 
