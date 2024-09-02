@@ -23,7 +23,7 @@ cd my-vue-flow-project
 
 npm add @vue-flow/core
 
-npm run dev
+npm run dev -- --host 0.0.0.0
 ```
 
 

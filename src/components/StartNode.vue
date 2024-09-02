@@ -78,12 +78,12 @@ const handleInputChange = (e: Event, index: number, field: keyof InputItem) => {
 <template>
   <div class="node custom-node">
     <!-- 底部連接點 -->
-    <Handle type="source" :position="Position.Bottom" />
+    <Handle type="source" :position="Position.Right" />
     
     <!-- 節點標題和描述 -->
     <div class="node-header">
-      <h3>{{ node.data.label }}</h3>
-      <p>{{ node.data.description }}</p>
+      <h3>Start</h3>
+      <p>工作流的起始節點，用來設定啟動工作流所需的資訊</p>
     </div>
     
     <!-- 節點內容 -->

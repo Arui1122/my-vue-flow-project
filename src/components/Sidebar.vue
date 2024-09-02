@@ -1,4 +1,5 @@
 <script setup>
+// 這是 src/components/Sidebar.vue
 // 定義一個名為 'addNode' 的自定義事件
 // 這個事件將被用來通知父組件添加新節點
 const emit = defineEmits(['addNode']);
@@ -9,6 +10,60 @@ const addNode = (type) => {
   // 觸發 'addNode' 事件，並將節點類型作為參數傳遞給父組件
   emit('addNode', type);
 };
+
+const addLLMNode = () => {
+  console.log('side New node added:');
+  const newNode = {
+    id: `llm-${Date.now()}`,
+    type: 'llm',
+    position: { x: Math.random() * 500, y: Math.random() * 500 },
+    data: {
+      label: 'LLM Node',
+      model: 'GPT-3.5 Turbo',
+      inputs: [],
+      prompt: '',
+      outputs: [],
+    },
+  };
+  emit('addNode', newNode);
+};
+
+const addKMNode = () => {
+  console.log('side New KM node added:');
+  const newNode = {
+    id: `km-${Date.now()}`,
+    type: 'km',
+    position: { x: Math.random() * 500, y: Math.random() * 500 },
+    data: {
+      label: 'Knowledge Management',
+      reference: 'Reference',
+      query: '',
+      knowledge: ['test'],
+      searchStrategy: 'Semantics',
+      maxRecalls: 1,
+      minMatchingDegree: 0.5,
+    },
+  };
+  emit('addNode', newNode);
+};
+
+const addGatewayNode = () => {
+  console.log('New Gateway node added:');
+  const newNode = {
+    id: `gateway-${Date.now()}`,
+    type: 'gateway',
+    position: { x: Math.random() * 500, y: Math.random() * 500 },
+    data: {
+      label: 'Gateway Node',
+      model: 'gpt-3.5-turbo',
+      paths: [],
+      description: '我们可以设定分支条件，然后大语言模型就能根据这些条件来决定对话的发展方向。',
+    },
+  };
+  emit('addNode', newNode);
+};
+
+
 </script>
 
 <template>
@@ -21,13 +76,13 @@ const addNode = (type) => {
     <div class="buttons">
       <!-- 添加開始節點的按鈕 -->
       <!-- 當點擊時，調用 addNode 函數並傳入 'start' 作為參數 -->
-      <button @click="addNode('start')">添加開始節點</button>
+      <!-- <button @click="addNode('start')">添加開始節點</button> -->
 
       <!-- 添加 LLM (語言模型) 節點的按鈕 -->
-      <button @click="addNode('llm')">添加 LLM 節點</button>
+      <button @click="addLLMNode">添加 LLM 節點</button>
+      <button @click="addKMNode">添加 KM 節點</button>
+      <button @click="addGatewayNode">添加決策節點</button>
 
-      <!-- 添加輸出節點的按鈕 -->
-      <button @click="addNode('output')">添加輸出節點</button>
     </div>
   </aside>
 </template>
@@ -46,7 +101,7 @@ aside {
 
 /* 說明文字的樣式 */
 .description {
-  font-size: 14px; /* 字體大小 */
+  font-size: 12px; /* 字體大小 */
   margin-bottom: 10px; /* 下方留白 */
 }
 

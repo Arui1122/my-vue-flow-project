@@ -77,7 +77,7 @@ watch([model, inputs, prompt, outputs], updateNodeData, { deep: true });
     <!-- 節點標題和描述 -->
     <div class="node-header">
       <h3>LLM</h3>
-      <p>調用大型語言模型，使用變量和提示詞生成回應。</p>
+      <p>呼叫大型語言模型，使用變量和提示詞生成回應。</p>
     </div>
     
     <!-- 節點內容 -->
