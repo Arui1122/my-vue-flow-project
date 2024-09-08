@@ -72,7 +72,7 @@ watch([model, inputs, prompt, outputs], updateNodeData, { deep: true });
 <template>
   <div class="node llm-node">
     <!-- 頂部連接點 -->
-    <Handle type="target" :position="Position.Top" />
+    <Handle type="target" :position="Position.Left" />
     
     <!-- 節點標題和描述 -->
     <div class="node-header">
@@ -135,7 +135,7 @@ watch([model, inputs, prompt, outputs], updateNodeData, { deep: true });
     </div>
     
     <!-- 底部連接點 -->
-    <Handle type="source" :position="Position.Bottom" />
+    <Handle type="source" :position="Position.Right" />
   </div>
 </template>
 

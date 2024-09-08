@@ -46,7 +46,7 @@ watch([reference, query, knowledge, searchStrategy, maxRecalls, minMatchingDegre
 
 <template>
   <div class="node km-node">
-    <Handle type="target" :position="Position.Top" />
+    <Handle type="target" :position="Position.Left" />
     
     <div class="node-header">
       <h3>Knowledge</h3>
@@ -99,7 +99,7 @@ watch([reference, query, knowledge, searchStrategy, maxRecalls, minMatchingDegre
       </div>
     </div>
     
-    <Handle type="source" :position="Position.Bottom" />
+    <Handle type="source" :position="Position.Right" />
   </div>
 </template>
 

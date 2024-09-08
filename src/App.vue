@@ -35,9 +35,9 @@ const nodeTypes = {
 // 預設節點
 const defaultNodes = [
   {
-    id: '1',
+    id: '0',
     type: 'start',
-    position: { x: 250, y: 5 },
+    position: { x: 50, y: 500 },
     data: {
       inputs: [
         { name: 'user.query', type: 'String', description: '用戶輸入的訊息', required: true, isBuiltIn: true },
@@ -48,7 +48,7 @@ const defaultNodes = [
   {
     id: '999',
     type: 'end',
-    position: { x: 400, y: 400 },
+    position: { x: 2400, y: 400 },
     data: {
       label: '結束',
       responseMode: 'direct',
@@ -269,7 +269,7 @@ const onInteractionChange = (interactionEnabled) => console.log('交互變更:',
 
 <template>
   <div style="width: 100vw; height: 100vh;">
-    <VueFlow :default-viewport="{ zoom: 0.8, x: 0, y: 0 }" v-model:nodes="nodes" v-model:edges="edges" :node-types="nodeTypes" :connect-on-click="true"
+    <VueFlow :default-viewport="{ zoom: 0.5, x: 0, y: 0 }" v-model:nodes="nodes" v-model:edges="edges" :node-types="nodeTypes" :connect-on-click="true"
       >
       <Background pattern-color="#aaa" :gap="16" />
       <MiniMap />

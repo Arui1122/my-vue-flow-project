@@ -60,7 +60,7 @@ watch([responseMode, outputVariables, response, streamingOutput], updateNodeData
 <template>
   <div class="node end-node">
     <!-- 頂部連接點 -->
-    <Handle type="target" :position="Position.Top" />
+    <Handle type="target" :position="Position.Left" />
 
     <!-- 節點標題和描述 -->
     <div class="node-header">
@@ -115,7 +115,7 @@ watch([responseMode, outputVariables, response, streamingOutput], updateNodeData
     </div>
 
     <!-- 底部連接點 -->
-    <Handle type="source" :position="Position.Bottom" />
+    <!-- <Handle type="source" :position="Position.Left" /> -->
   </div>
 </template>
 
