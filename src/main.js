@@ -6,7 +6,7 @@ const router = createRouter({
   history: createWebHistory(),
   routes: [
     { path: '/', component: App },
-    { path: '/flow/:flowId', component: App }
+    { path: '/workflows/:flowId', component: App }
   ]
 })
 

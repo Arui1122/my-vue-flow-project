@@ -88,8 +88,9 @@ watch([model, inputs, prompt, outputs], updateNodeData, { deep: true });
           <label for="model-select">模型</label>
         </h4>
         <select id="model-select" v-model="model">
-          <option value="GPT-3.5 Turbo">GPT-3.5 Turbo</option>
-          <option value="GPT-4">GPT-4</option>
+          <option value="azure-openai-gpt-4o">Azure OpenAI GPT-4o</option>
+          <option value="anthropic-claude-3-5-sonnet">Claude 3.5 Sonnet</option>
+          <option value="gemini-1.5-flash">Gemini 1.5 Flash</option>
         </select>
       </div>
       

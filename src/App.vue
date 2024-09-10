@@ -22,6 +22,7 @@ import '@vue-flow/minimap/dist/style.css';
 
 // 獲取當前路由
 const route = useRoute();
+const flowId = ref(route.params.flowId);
 
 // 定義自定義節點類型
 const nodeTypes = {
@@ -50,11 +51,8 @@ const defaultNodes = [
     type: 'end',
     position: { x: 2400, y: 400 },
     data: {
-      label: '結束',
-      responseMode: 'direct',
-      outputVariables: [],
       response: '',
-      streamingOutput: false,
+      streamingOutput: true,
     },
   },
 ];
@@ -70,9 +68,10 @@ const edges = ref(defaultEdges);
 const fetchFlowData = async (flowId) => {
   console.log('開始獲取流程數據, flowId:', flowId);
   if (flowId) {
+    flowId = '66dfc2358d08f42b113ddd45';
     try {
       console.log('從 API 獲取數據...');
-      const response = await fetch(`http://localhost:5173/api/flow/${flowId}`);
+      const response = await fetch(`http://localhost:8080/workflows/${flowId}`);
 
       if (!response.ok) {
         throw new Error(`HTTP 錯誤! 狀態: ${response.status}`);
@@ -83,7 +82,14 @@ const fetchFlowData = async (flowId) => {
 
       if (data && data.nodes && data.nodes.length > 0) {
         console.log('使用 API 數據');
-        nodes.value = data.nodes;
+        // 確保每個節點都有一個唯一的 id
+        const processedNodes = data.nodes.map((node, index) => ({
+          ...node,
+          id: node.id || `node-${index}`,
+          // 確保 position 是一個對象
+          position: typeof node.position === 'object' ? node.position : { x: 0, y: 0 }
+        }));
+        nodes.value = processedNodes;
         edges.value = data.edges || [];
       } else {
         console.log('API 返回空數據，使用默認數據');
@@ -124,6 +130,7 @@ watch(
   () => route.params.flowId,
   async (newFlowId) => {
     console.log('Flow ID 已變更:', newFlowId);
+    flowId.value = newFlowId;
     fetchFlowData(newFlowId);
   }
 );
@@ -274,7 +281,7 @@ const onInteractionChange = (interactionEnabled) => console.log('交互變更:',
       <Background pattern-color="#aaa" :gap="16" />
       <MiniMap />
       <Controls @zoom-in="onZoomIn" @zoom-out="onZoomOut" @fit-view="onFitView" @interaction-change="onInteractionChange" />
-      <SaveRestoreControls />
+      <SaveRestoreControls :flow-id="flowId" />
     </VueFlow>
     <Sidebar @addNode="onNodeAdded" />
   </div>

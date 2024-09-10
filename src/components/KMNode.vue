@@ -4,7 +4,6 @@ import { ref, watch } from 'vue';
 
 interface KMNodeData {
   label: string;
-  reference: string;
   query: string;
   knowledge: string[];
   searchStrategy: string;
@@ -14,7 +13,6 @@ interface KMNodeData {
 
 const { node } = useNode<KMNodeData>();
 
-const reference = ref(node.data.reference || 'Reference');
 const query = ref(node.data.query || '');
 const knowledge = ref<string[]>(node.data.knowledge || ['test']);
 const searchStrategy = ref(node.data.searchStrategy || 'Semantics');
@@ -24,7 +22,6 @@ const minMatchingDegree = ref(node.data.minMatchingDegree || 0.5);
 const updateNodeData = () => {
   node.data = {
     ...node.data,
-    reference: reference.value,
     query: query.value,
     knowledge: knowledge.value,
     searchStrategy: searchStrategy.value,
@@ -41,7 +38,7 @@ const removeKnowledge = (index: number) => {
   knowledge.value.splice(index, 1);
 };
 
-watch([reference, query, knowledge, searchStrategy, maxRecalls, minMatchingDegree], updateNodeData, { deep: true });
+watch([query, knowledge, searchStrategy, maxRecalls, minMatchingDegree], updateNodeData, { deep: true });
 </script>
 
 <template>
