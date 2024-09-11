@@ -64,7 +64,7 @@ watch([modelId, paths, prompt], updateNodeData, { deep: true });
     <Handle type="target" :position="Position.Left" />
     
     <div class="node-header">
-      <h3>Gateway</h3>
+      <h3>Gateway ({{ node.id }})</h3>
       <p>根據設定的條件決定流程的分支方向。</p>
     </div>
     

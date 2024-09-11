@@ -55,7 +55,7 @@ watch([responseMode, response, streamingOutput], updateNodeData, { deep: true })
 
     <!-- 節點標題和描述 -->
     <div class="node-header">
-      <h3>End</h3>
+      <h3>End ({{ node.id }})</h3>
       <p>工作流的最終節點，用於回覆工作流執行後的結果信息。</p>
     </div>
 

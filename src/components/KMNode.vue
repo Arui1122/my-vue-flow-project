@@ -42,7 +42,7 @@ watch([knowledge, searchStrategy, maxRecalls, minMatchingDegree], updateNodeData
     <Handle type="target" :position="Position.Left" />
     
     <div class="node-header">
-      <h3>Knowledge</h3>
+      <h3>Knowledge ({{ node.id }})</h3>
       <p>In the selected knowledge, the best matching information is recalled based on the input variable and returned as an Array.</p>
     </div>
     

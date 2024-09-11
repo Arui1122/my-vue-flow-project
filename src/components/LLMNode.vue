@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { Handle, Position, useNode } from '@vue-flow/core';
-import { ref, watch } from 'vue';
+import { ref, watch, computed } from 'vue';
 
 // 定義輸入參數的介面
 interface InputParam {
@@ -16,11 +16,18 @@ interface OutputParam {
   description: string;
 }
 
+interface Function {
+  id: string;        // 函數唯一標識符
+  name: string;      // 函數名稱
+  description: string; // 函數描述
+}
+
 // 定義節點數據的介面
 interface NodeData {
   modelId: string;
   inputs: InputParam[];
   prompt: string;
+  functions: string[]; // 選中的函數ID列表
   outputs: OutputParam[];
 }
 
@@ -31,7 +38,15 @@ const { node } = useNode<NodeData>();
 const modelId = ref(node.data.modelId || 'azure-openai-gpt-4o');
 const inputs = ref<InputParam[]>(node.data.inputs || []);
 const prompt = ref(node.data.prompt || '');
+const functions = ref<string[]>(node.data.functions || []);
 const outputs = ref<OutputParam[]>(node.data.outputs || []);
+
+// 預定義的函數列表
+const availableFunctions = computed(() => [
+  { id: 'func1', name: '函數1', description: '這是函數1的描述' },
+  { id: 'func2', name: '函數2', description: '這是函數2的描述' },
+  { id: 'func3', name: '函數3', description: '這是函數3的描述' },
+]);
 
 // 更新節點數據的函數
 const updateNodeData = () => {
@@ -40,6 +55,7 @@ const updateNodeData = () => {
     modelId: modelId.value,
     inputs: inputs.value,
     prompt: prompt.value,
+    functions: functions.value,
     outputs: outputs.value,
   };
 };
@@ -59,26 +75,38 @@ const addInput = () => addItem(inputs.value, { name: '', value: '', type: 'Strin
 // 移除輸入參數的函數
 const removeInput = (index: number) => removeItem(inputs.value, index);
 
+// 添加函數的函數
+const addFunction = () => {
+  if (functions.value.length < availableFunctions.value.length) {
+    functions.value.push('');
+  }
+};
+
+// 移除函數的函數
+const removeFunction = (index: number) => {
+  functions.value.splice(index, 1);
+};
+
 // 添加輸出參數的函數
 const addOutput = () => addItem(outputs.value, { name: '', type: 'String', description: '' });
 // 移除輸出參數的函數
 const removeOutput = (index: number) => removeItem(outputs.value, index);
 
 // 監聽數據變化並更新節點
-watch([modelId, inputs, prompt, outputs], updateNodeData, { deep: true });
+watch([modelId, inputs, prompt, functions, outputs], updateNodeData, { deep: true });
 </script>
 
 <template>
   <div class="node llm-node">
     <!-- 頂部連接點 -->
     <Handle type="target" :position="Position.Left" />
-    
+
     <!-- 節點標題和描述 -->
     <div class="node-header">
       <h3>LLM ({{ node.id }}) </h3>
       <p>呼叫大型語言模型，使用變量和提示詞生成回應。</p>
     </div>
-    
+
     <!-- 節點內容 -->
     <div class="node-content">
       <!-- 模型選擇部分 -->
@@ -92,7 +120,7 @@ watch([modelId, inputs, prompt, outputs], updateNodeData, { deep: true });
           <option value="gemini-1.5-flash">Gemini 1.5 Flash</option>
         </select>
       </div>
-      
+
       <!-- 輸入參數部分 -->
       <div class="section">
         <h4>輸入</h4>
@@ -108,7 +136,7 @@ watch([modelId, inputs, prompt, outputs], updateNodeData, { deep: true });
         </div>
         <button @click="addInput">+ 新增輸入</button>
       </div>
-      
+
       <!-- 提示詞部分 -->
       <div class="section">
         <h4>
@@ -116,7 +144,22 @@ watch([modelId, inputs, prompt, outputs], updateNodeData, { deep: true });
         </h4>
         <textarea id="prompt-textarea" v-model="prompt" placeholder="用戶提示。您可以使用 {{變量名}} 來引用輸入參數中的變量。"></textarea>
       </div>
-      
+
+      <!-- 函數選擇部分 -->
+      <div class="section">
+        <h4>函數</h4>
+        <div v-for="(func, index) in functions" :key="index" class="function-row">
+          <select v-model="functions[index]">
+            <option value="">請選擇函數</option>
+            <option v-for="availableFunc in availableFunctions" :key="availableFunc.id" :value="availableFunc.id">
+              {{ availableFunc.name }} - {{ availableFunc.name }}
+            </option>
+          </select>
+          <button @click="removeFunction(index)" aria-label="移除函數">-</button>
+        </div>
+        <button @click="addFunction" :disabled="functions.length >= availableFunctions.length">+ 新增函數</button>
+      </div>
+
       <!-- 輸出參數部分 -->
       <div class="section">
         <h4>輸出</h4>
@@ -133,7 +176,7 @@ watch([modelId, inputs, prompt, outputs], updateNodeData, { deep: true });
         <button @click="addOutput">+ 新增輸出</button>
       </div>
     </div>
-    
+
     <!-- 底部連接點 -->
     <Handle type="source" :position="Position.Right" />
   </div>
@@ -141,4 +184,15 @@ watch([modelId, inputs, prompt, outputs], updateNodeData, { deep: true });
 
 <style scoped>
 @import '../assets/commonStyles.css';
+
+.function-row {
+  display: flex;
+  align-items: center;
+  margin-bottom: 5px;
+}
+
+.function-row select {
+  flex-grow: 1;
+  margin-right: 5px;
+}
 </style>
