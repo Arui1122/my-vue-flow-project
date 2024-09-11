@@ -18,8 +18,7 @@ interface OutputParam {
 
 // 定義節點數據的介面
 interface NodeData {
-  label: string;
-  model: string;
+  modelId: string;
   inputs: InputParam[];
   prompt: string;
   outputs: OutputParam[];
@@ -29,7 +28,7 @@ interface NodeData {
 const { node } = useNode<NodeData>();
 
 // 創建響應式引用來存儲節點數據
-const model = ref(node.data.model || 'GPT-3.5 Turbo');
+const modelId = ref(node.data.modelId || 'azure-openai-gpt-4o');
 const inputs = ref<InputParam[]>(node.data.inputs || []);
 const prompt = ref(node.data.prompt || '');
 const outputs = ref<OutputParam[]>(node.data.outputs || []);
@@ -38,7 +37,7 @@ const outputs = ref<OutputParam[]>(node.data.outputs || []);
 const updateNodeData = () => {
   node.data = {
     ...node.data,
-    model: model.value,
+    modelId: modelId.value,
     inputs: inputs.value,
     prompt: prompt.value,
     outputs: outputs.value,
@@ -66,7 +65,7 @@ const addOutput = () => addItem(outputs.value, { name: '', type: 'String', descr
 const removeOutput = (index: number) => removeItem(outputs.value, index);
 
 // 監聽數據變化並更新節點
-watch([model, inputs, prompt, outputs], updateNodeData, { deep: true });
+watch([modelId, inputs, prompt, outputs], updateNodeData, { deep: true });
 </script>
 
 <template>
@@ -76,7 +75,7 @@ watch([model, inputs, prompt, outputs], updateNodeData, { deep: true });
     
     <!-- 節點標題和描述 -->
     <div class="node-header">
-      <h3>LLM</h3>
+      <h3>LLM ({{ node.id }}) </h3>
       <p>呼叫大型語言模型，使用變量和提示詞生成回應。</p>
     </div>
     
@@ -87,7 +86,7 @@ watch([model, inputs, prompt, outputs], updateNodeData, { deep: true });
         <h4>
           <label for="model-select">模型</label>
         </h4>
-        <select id="model-select" v-model="model">
+        <select id="model-select" v-model="modelId">
           <option value="azure-openai-gpt-4o">Azure OpenAI GPT-4o</option>
           <option value="anthropic-claude-3-5-sonnet">Claude 3.5 Sonnet</option>
           <option value="gemini-1.5-flash">Gemini 1.5 Flash</option>

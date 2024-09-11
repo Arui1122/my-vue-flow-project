@@ -1,68 +1,72 @@
 <script setup>
-// 這是 src/components/Sidebar.vue
+import { ref, watch } from 'vue';
+
+
+const props = defineProps({
+  maxCounters: {
+    type: Object,
+    required: true
+  }
+});
+
 // 定義一個名為 'addNode' 的自定義事件
 // 這個事件將被用來通知父組件添加新節點
 const emit = defineEmits(['addNode']);
 
-// 定義一個函數，當用戶點擊按鈕時調用
-// 這個函數接受一個參數 'type'，表示要添加的節點類型
+const counters = ref({ ...props.maxCounters });
+
+watch(() => props.maxCounters, (newValue) => {
+  counters.value = { ...newValue };
+});
+
 const addNode = (type) => {
-  // 觸發 'addNode' 事件，並將節點類型作為參數傳遞給父組件
-  emit('addNode', type);
-};
-
-const addLLMNode = () => {
-  console.log('side New node added:');
+  // 確保 counters 中有對應類型的計數器
+  if (!(type in counters.value)) {
+    counters.value[type] = 0;
+  }
+  
+  counters.value[type]++;
+  const formattedCounter = String(counters.value[type]).padStart(3, '0');
   const newNode = {
-    id: `llm-${Date.now()}`,
-    type: 'llm',
+    id: `${type}-${formattedCounter}`,
+    type: type,
     position: { x: Math.random() * 500, y: Math.random() * 500 },
-    data: {
-      label: 'LLM Node',
-      model: 'GPT-3.5 Turbo',
-      inputs: [],
-      prompt: '',
-      outputs: [],
-    },
+    data: getInitialData(type),
   };
+  console.log(`New ${type.toUpperCase()} node added:`, newNode);
   emit('addNode', newNode);
 };
 
-const addKMNode = () => {
-  console.log('side New KM node added:');
-  const newNode = {
-    id: `km-${Date.now()}`,
-    type: 'km',
-    position: { x: Math.random() * 500, y: Math.random() * 500 },
-    data: {
-      label: 'Knowledge Management',
-      reference: 'Reference',
-      query: '',
-      knowledge: ['test'],
-      searchStrategy: 'Semantics',
-      maxRecalls: 1,
-      minMatchingDegree: 0.5,
-    },
-  };
-  emit('addNode', newNode);
+const getInitialData = (type) => {
+  switch (type) {
+    case 'llm':
+      return {
+        modelId: 'azure-openai-gpt-4o',
+        inputs: [],
+        prompt: '',
+        outputs: [],
+      };
+    case 'km':
+      return {
+        knowledge: [''],
+        searchStrategy: 'Semantics',
+        maxRecalls: 1,
+        minMatchingDegree: 0.5,
+      };
+    case 'gateway':
+      return {
+        model: 'azure-openai-gpt-4o',
+        paths: [],
+        description: '我們可以設定決策條件，然後大語言模型就能根據這些條件來決定對話的發展方向。',
+      };
+    default:
+      return {};
+  }
 };
 
-const addGatewayNode = () => {
-  console.log('New Gateway node added:');
-  const newNode = {
-    id: `gateway-${Date.now()}`,
-    type: 'gateway',
-    position: { x: Math.random() * 500, y: Math.random() * 500 },
-    data: {
-      label: 'Gateway Node',
-      model: 'gpt-3.5-turbo',
-      paths: [],
-      description: '我们可以设定分支条件，然后大语言模型就能根据这些条件来决定对话的发展方向。',
-    },
-  };
-  emit('addNode', newNode);
-};
-
+const addLLMNode = () => addNode('llm');
+const addKMNode = () => addNode('km');
+const addGatewayNode = () => addNode('gateway');
 
 </script>
 

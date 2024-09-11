@@ -3,8 +3,6 @@ import { Handle, Position, useNode } from '@vue-flow/core';
 import { ref, watch } from 'vue';
 
 interface KMNodeData {
-  label: string;
-  query: string;
   knowledge: string[];
   searchStrategy: string;
   maxRecalls: number;
@@ -13,7 +11,6 @@ interface KMNodeData {
 
 const { node } = useNode<KMNodeData>();
 
-const query = ref(node.data.query || '');
 const knowledge = ref<string[]>(node.data.knowledge || ['test']);
 const searchStrategy = ref(node.data.searchStrategy || 'Semantics');
 const maxRecalls = ref(node.data.maxRecalls || 1);
@@ -22,7 +19,6 @@ const minMatchingDegree = ref(node.data.minMatchingDegree || 0.5);
 const updateNodeData = () => {
   node.data = {
     ...node.data,
-    query: query.value,
     knowledge: knowledge.value,
     searchStrategy: searchStrategy.value,
     maxRecalls: maxRecalls.value,
@@ -38,7 +34,7 @@ const removeKnowledge = (index: number) => {
   knowledge.value.splice(index, 1);
 };
 
-watch([query, knowledge, searchStrategy, maxRecalls, minMatchingDegree], updateNodeData, { deep: true });
+watch([knowledge, searchStrategy, maxRecalls, minMatchingDegree], updateNodeData, { deep: true });
 </script>
 
 <template>
@@ -50,22 +46,7 @@ watch([query, knowledge, searchStrategy, maxRecalls, minMatchingDegree], updateN
       <p>In the selected knowledge, the best matching information is recalled based on the input variable and returned as an Array.</p>
     </div>
     
-    <div class="node-content">
-      <!-- <div class="section">
-        <h4>Enter</h4>
-        <div class="input-row">
-          <label for="query">Query*</label>
-          <input id="query" v-model="query" placeholder="String">
-        </div>
-        <div class="input-row">
-          <label for="reference">Reference</label>
-          <select id="reference" v-model="reference">
-            <option value="Reference">Reference</option>
-            <option value="Start - BOT_USE">Start - BOT_USE</option>
-          </select>
-        </div>
-      </div> -->
-      
+    <div class="node-content">      
       <div class="section">
         <h4>Knowledge</h4>
         <div v-for="(item, index) in knowledge" :key="index" class="input-row">

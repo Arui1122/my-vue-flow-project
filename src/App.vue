@@ -33,21 +33,54 @@ const nodeTypes = {
   end: markRaw(EndNode),
 };
 
+// 新增：計算各類型節點最大流水號的函數
+const calculateMaxCounters = () => {
+  const counters = {
+    llm: 0,
+    km: 0,
+    gateway: 0
+    // 可以根據需要添加其他節點類型
+  };
+
+  nodes.value.forEach(node => {
+    if (node.type === 'start' || node.type === 'end') {
+      return; // 跳過 start 和 end 節點
+    }
+
+    const match = node.id.match(/(\w+)-(\d{3})/);
+    if (match) {
+      const [, type, numStr] = match;
+      if (type in counters) {
+        counters[type] = Math.max(counters[type], parseInt(numStr, 10));
+      }
+    }
+  });
+
+  return counters;
+};
+
+// 新增：最大流水號的響應式引用
+const maxCounters = ref({
+  llm: 0,
+  km: 0,
+  gateway: 0
+});
+
 // 預設節點
 const defaultNodes = [
   {
-    id: '0',
+    id: 'start',
     type: 'start',
     position: { x: 50, y: 500 },
     data: {
       inputs: [
-        { name: 'user.query', type: 'String', description: '用戶輸入的訊息', required: true, isBuiltIn: true },
-        { name: 'sys.info', type: 'String', description: '系統角色提示', required: false, isBuiltIn: false },
+        { name: 'user_query', type: 'String', description: '用戶輸入的訊息', required: true, isBuiltIn: true },
+        { name: 'sys_info', type: 'String', description: '系統角色提示', required: false, isBuiltIn: false },
       ]
     },
   },
   {
-    id: '999',
+    id: 'end',
     type: 'end',
     position: { x: 2400, y: 400 },
     data: {
@@ -115,6 +148,10 @@ const fetchFlowData = async (flowId) => {
   // 使用 Vue Flow 的方法設置節點和邊
   setNodes(nodes.value);
   setEdges(edges.value);
+
+  // 計算並設置最大流水號
+  maxCounters.value = calculateMaxCounters();
+  console.log('最大流水號:', maxCounters.value);
 };
 
 // 組件掛載時執行
@@ -264,6 +301,8 @@ function isTargetOfRemovedEdge(edgeId, targetId) {
 const onNodeAdded = (newNode) => {
   console.log('新增節點:', newNode);
   addNodes([newNode]);
+  // 更新最大流水號
+  maxCounters.value = calculateMaxCounters();
 };
 
 // 縮放和交互變化的處理函數

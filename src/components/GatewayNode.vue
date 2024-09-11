@@ -10,25 +10,24 @@ interface Path {
 }
 
 interface GatewayNodeData {
-  label: string;
-  model: string;
+  modelId: string;
   paths: Path[];
-  description: string;
+  prompt: string;
 }
 
 const { node } = useNode<GatewayNodeData>();
 
-const model = ref(node.data.model || 'gpt-3.5-turbo');
+const modelId = ref(node.data.modelId || 'azure-openai-gpt-4o');
 const paths = ref<Path[]>(node.data.paths || []);
-const description = ref(node.data.description || '我們可以設定分支條件，然後大語言模型就能根據這些條件來決定對話的發展方向。');
+const prompt = ref(node.data.prompt || '我們可以設定決策條件，然後大語言模型就能根據這些條件來決定對話的發展方向。');
 
 
 const updateNodeData = () => {
   node.data = {
     ...node.data,
-    model: model.value,
+    modelId: modelId.value,
     paths: paths.value,
-    description: description.value,
+    prompt: prompt.value,
   };
 };
 
@@ -57,7 +56,7 @@ const pathPositions = computed(() => {
   });
 });
 
-watch([model, paths, description], updateNodeData, { deep: true });
+watch([modelId, paths, prompt], updateNodeData, { deep: true });
 </script>
 
 <template>
@@ -72,9 +71,10 @@ watch([model, paths, description], updateNodeData, { deep: true });
     <div class="node-content">
       <div class="section">
         <h4>模型</h4>
-        <select v-model="model">
-          <option value="gpt-3.5-turbo">GPT-3.5-Turbo</option>
-          <option value="gpt-4">GPT-4</option>
+        <select v-model="modelId">
+          <option value="azure-openai-gpt-4o">Azure OpenAI GPT-4o</option>
+          <option value="anthropic-claude-3-5-sonnet">Claude 3.5 Sonnet</option>
+          <option value="gemini-1.5-flash">Gemini 1.5 Flash</option>
         </select>
       </div>
       
@@ -94,8 +94,8 @@ watch([model, paths, description], updateNodeData, { deep: true });
       </div>
       
       <div class="section">
-        <h4>描述</h4>
-        <textarea v-model="description" rows="3" placeholder="描述 Gateway 的功能和用途"></textarea>
+        <h4>決策提示</h4>
+        <textarea v-model="prompt" rows="3" placeholder="描述決策的提示"></textarea>
       </div>
     </div>
   </div>

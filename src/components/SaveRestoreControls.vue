@@ -37,7 +37,8 @@ async function onSave() {
     : 'http://localhost:8080/api/v1/workflows';
 
   const method = currentFlowId.value ? 'PUT' : 'POST';
-
+  // var data = JSON.stringify(flowObject);
+  console.log(`保存的資料: ${JSON.stringify(flowObject)}`);
   try {
     const response = await fetch(url, {
       method: method,

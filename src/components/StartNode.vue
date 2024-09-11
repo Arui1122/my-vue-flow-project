@@ -13,8 +13,6 @@ interface InputItem {
 
 // 定義節點數據的介面
 interface NodeData {
-  label: string;
-  description: string;
   inputs: InputItem[];
 }
 
