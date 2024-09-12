@@ -74,8 +74,8 @@ const defaultNodes = [
     position: { x: 50, y: 500 },
     data: {
       inputs: [
-        { name: 'user_query', type: 'String', description: '用戶輸入的訊息', required: true, isBuiltIn: true },
-        { name: 'sys_info', type: 'String', description: '系統角色提示', required: false, isBuiltIn: false },
+        { name: 'user_query', type: 'String', value: '', description: '用戶輸入的訊息', required: true, isBuiltIn: true },
+        { name: 'sys_info', type: 'String', value: '系統提示', description: '系統提示', required: false, isBuiltIn: false },
       ]
     },
   },

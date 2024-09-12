@@ -35,7 +35,7 @@ interface NodeData {
 const { node } = useNode<NodeData>();
 
 // 創建響應式引用來存儲節點數據
-const modelId = ref(node.data.modelId || 'azure-openai-gpt-4o');
+const modelId = ref(node.data.modelId || 'openai-gpt-4o');
 const inputs = ref<InputParam[]>(node.data.inputs || []);
 const prompt = ref(node.data.prompt || '');
 const functions = ref<string[]>(node.data.functions || []);
@@ -118,6 +118,7 @@ watch([modelId, inputs, prompt, functions, outputs], updateNodeData, { deep: tru
           <option value="azure-openai-gpt-4o">Azure OpenAI GPT-4o</option>
           <option value="anthropic-claude-3-5-sonnet">Claude 3.5 Sonnet</option>
           <option value="gemini-1.5-flash">Gemini 1.5 Flash</option>
+          <option value="openai-gpt-4o">OpenAI GPT-4o</option>
         </select>
       </div>
 

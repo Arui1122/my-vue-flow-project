@@ -17,7 +17,7 @@ interface GatewayNodeData {
 
 const { node } = useNode<GatewayNodeData>();
 
-const modelId = ref(node.data.modelId || 'azure-openai-gpt-4o');
+const modelId = ref(node.data.modelId || 'openai-gpt-4o');
 const paths = ref<Path[]>(node.data.paths || []);
 const prompt = ref(node.data.prompt || '我們可以設定決策條件，然後大語言模型就能根據這些條件來決定對話的發展方向。');
 
@@ -75,6 +75,7 @@ watch([modelId, paths, prompt], updateNodeData, { deep: true });
           <option value="azure-openai-gpt-4o">Azure OpenAI GPT-4o</option>
           <option value="anthropic-claude-3-5-sonnet">Claude 3.5 Sonnet</option>
           <option value="gemini-1.5-flash">Gemini 1.5 Flash</option>
+          <option value="openai-gpt-4o">OpenAI GPT-4o</option>
         </select>
       </div>
       

@@ -41,7 +41,7 @@ const getInitialData = (type) => {
   switch (type) {
     case 'llm':
       return {
-        modelId: 'azure-openai-gpt-4o',
+        modelId: 'openai-gpt-4o',
         inputs: [],
         prompt: '',
         outputs: [],
@@ -55,7 +55,7 @@ const getInitialData = (type) => {
       };
     case 'gateway':
       return {
-        model: 'azure-openai-gpt-4o',
+        model: 'openai-gpt-4o',
         paths: [],
         description: '我們可以設定決策條件，然後大語言模型就能根據這些條件來決定對話的發展方向。',
       };

@@ -6,6 +6,7 @@ import { computed } from 'vue';
 interface InputItem {
   name: string;
   type: 'String' | 'Number' | 'Boolean';
+  value: string;
   description: string;
   required: boolean;
   isBuiltIn: boolean;
@@ -35,7 +36,8 @@ const addInput = () => {
   const newInput: InputItem = {
     name: `新輸入${inputs.value.length + 1}`,
     type: 'String',
-    description: '請輸入描述',
+    value: '',
+    description: '',
     required: false,
     isBuiltIn: false
   };
@@ -71,6 +73,14 @@ const handleInputChange = (e: Event, index: number, field: keyof InputItem) => {
 
   updateInput(index, field, value);
 };
+
+const getValueDisplay = (item: InputItem) => {
+  if (item.name === 'user_query' && item.isBuiltIn) {
+    return '使用者輸入的內容';
+  }
+  return item.value;
+};
+
 </script>
 
 <template>
@@ -101,7 +111,7 @@ const handleInputChange = (e: Event, index: number, field: keyof InputItem) => {
           </select>
           
           <!-- 描述輸入框 -->
-          <input :id="`description-${index}`" :value="item.description" @input="e => handleInputChange(e, index, 'description')" placeholder="描述" :disabled="item.isBuiltIn" />
+          <input :id="`value-${index}`" :value="getValueDisplay(item)"  @input="e => handleInputChange(e, index, 'value')" placeholder="值" :disabled="item.isBuiltIn" />
           
           <!-- 必填選項 -->
           <label :for="`required-${index}`" class="checkbox-container">
