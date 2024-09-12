@@ -31,10 +31,9 @@ watch(() => props.flowId, (newFlowId) => {
 async function onSave() {
   const flowObject = toObject();
   console.log('準備保存的圖表數據：', flowObject);
-
   const url = currentFlowId.value
-    ? `http://localhost:8080/api/v1/workflows/${currentFlowId.value}`
-    : 'http://localhost:8080/api/v1/workflows';
+    ? `http://localhost:8080/workflows/${currentFlowId.value}`
+    : 'http://localhost:8080/workflows';
 
   const method = currentFlowId.value ? 'PUT' : 'POST';
   // var data = JSON.stringify(flowObject);
