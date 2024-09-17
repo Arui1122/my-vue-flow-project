@@ -22,7 +22,7 @@ import '@vue-flow/minimap/dist/style.css';
 
 // 獲取當前路由
 const route = useRoute();
-const flowId = ref(route.params.flowId);
+const workflowId = ref(route.params.workflowId);
 
 // 定義自定義節點類型
 const nodeTypes = {
@@ -98,13 +98,13 @@ const nodes = ref(defaultNodes);
 const edges = ref(defaultEdges);
 
 // 從 API 獲取流程數據的函數
-const fetchFlowData = async (flowId) => {
-  console.log('開始獲取流程數據, flowId:', flowId);
-  if (flowId) {
+const fetchFlowData = async (workflowId) => {
+  console.log('開始獲取流程數據, workflowId:', workflowId);
+  if (workflowId) {
     // flowId = '66dfc2358d08f42b113ddd45';
     try {
       console.log('從 API 獲取數據...');
-      const response = await fetch(`http://localhost:8080/workflows/${flowId}`);
+      const response = await fetch(`http://localhost:8080/workflow/${workflowId}`);
 
       if (!response.ok) {
         throw new Error(`HTTP 錯誤! 狀態: ${response.status}`);
@@ -164,11 +164,11 @@ onMounted(() => {
 
 // 監聽路由參數變化
 watch(
-  () => route.params.flowId,
-  async (newFlowId) => {
-    console.log('Flow ID 已變更:', newFlowId);
-    flowId.value = newFlowId;
-    fetchFlowData(newFlowId);
+  () => route.params.workflowId,
+  async (newWorkflowId) => {
+    console.log('Flow ID 已變更:', newWorkflowId);
+    workflowId.value = newWorkflowId;
+    fetchFlowData(newWorkflowId);
   }
 );
 

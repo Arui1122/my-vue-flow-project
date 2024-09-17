@@ -1,7 +1,7 @@
 <script setup>
 // 導入所需的組件和函數
-import { ref, watch } from 'vue';
 import { Panel, useVueFlow } from '@vue-flow/core';
+import { ref, watch } from 'vue';
 
 // 定義 props
 const props = defineProps({
@@ -32,8 +32,8 @@ async function onSave() {
   const flowObject = toObject();
   console.log('準備保存的圖表數據：', flowObject);
   const url = currentFlowId.value
-    ? `http://localhost:8080/workflows/${currentFlowId.value}`
-    : 'http://localhost:8080/workflows';
+    ? `http://localhost:8080/workflow/${currentFlowId.value}`
+    : 'http://localhost:8080/workflow';
 
   const method = currentFlowId.value ? 'PUT' : 'POST';
   // var data = JSON.stringify(flowObject);
