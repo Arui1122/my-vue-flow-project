@@ -43,10 +43,10 @@ watch([knowledge, searchStrategy, maxRecalls, minMatchingDegree], updateNodeData
     
     <div class="node-header">
       <h3>Knowledge ({{ node.id }})</h3>
-      <p>In the selected knowledge, the best matching information is recalled based on the input variable and returned as an Array.</p>
+      <p>在選定的知識庫中，根據輸入找出最相似的資訊提供。</p>
     </div>
     
-    <div class="node-content">      
+    <div class="node-content">
       <div class="section">
         <h4>Knowledge</h4>
         <div v-for="(item, index) in knowledge" :key="index" class="input-row">

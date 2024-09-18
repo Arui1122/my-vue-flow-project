@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { Handle, Position, useNode } from '@vue-flow/core';
-import { ref, watch, computed } from 'vue';
+import { computed, ref, watch } from 'vue';
 
 // 定義輸入參數的介面
 interface InputParam {
@@ -22,11 +22,17 @@ interface Function {
   description: string; // 函數描述
 }
 
+interface Agent {
+  id: string;        // Agent 唯一標識符
+  name: string;      // Agent 名稱
+}
+
 // 定義節點數據的介面
 interface NodeData {
   modelId: string;
   inputs: InputParam[];
   prompt: string;
+  agents: string[];    // 選中的 Agent ID 列表
   functions: string[]; // 選中的函數ID列表
   outputs: OutputParam[];
 }
@@ -38,8 +44,16 @@ const { node } = useNode<NodeData>();
 const modelId = ref(node.data.modelId || 'openai-gpt-4o');
 const inputs = ref<InputParam[]>(node.data.inputs || []);
 const prompt = ref(node.data.prompt || '');
+const agents = ref<string[]>(node.data.agents || []);
 const functions = ref<string[]>(node.data.functions || []);
 const outputs = ref<OutputParam[]>(node.data.outputs || []);
+
+// 預定義的 Agent 列表
+const availableAgents = computed(() => [
+  { id: 'agent1', name: 'java開發大師' },
+  { id: 'agent2', name: '雲端顧問' },
+  { id: 'agent3', name: 'Agent 3' },
+]);
 
 // 預定義的函數列表
 const availableFunctions = computed(() => [
@@ -55,6 +69,7 @@ const updateNodeData = () => {
     modelId: modelId.value,
     inputs: inputs.value,
     prompt: prompt.value,
+    agents: [...agents.value], // 使用展開運算符創建新數組
     functions: functions.value,
     outputs: outputs.value,
   };
@@ -87,13 +102,39 @@ const removeFunction = (index: number) => {
   functions.value.splice(index, 1);
 };
 
+// 添加 Agent 的函數
+const addAgent = () => {
+  if (agents.value.length < availableAgents.value.length) {
+    const nextAvailableAgent = availableAgents.value.find(agent => !agents.value.includes(agent.id));
+    if (nextAvailableAgent) {
+      agents.value.push(nextAvailableAgent.id);
+    }
+  }
+};
+
+// 移除 Agent 的函數
+const removeAgent = (index: number) => {
+  agents.value.splice(index, 1);
+};
+
+const onAgentChange = (index: number) => {
+  log(`Agent 選擇已更改: ${agents.value[index]}`);
+  updateNodeData();
+};
+
 // 添加輸出參數的函數
 const addOutput = () => addItem(outputs.value, { name: '', type: 'String', description: '' });
 // 移除輸出參數的函數
 const removeOutput = (index: number) => removeItem(outputs.value, index);
 
 // 監聽數據變化並更新節點
-watch([modelId, inputs, prompt, functions, outputs], updateNodeData, { deep: true });
+watch([modelId, inputs, prompt, agents, functions, outputs], updateNodeData, { deep: true });
+
+// 日誌功能
+const log = (message: string) => {
+  console.log(`[LLM Node ${node.id}]: ${message}`);
+};
+
 </script>
 
 <template>
@@ -159,6 +200,21 @@ watch([modelId, inputs, prompt, functions, outputs], updateNodeData, { deep: tru
           <button @click="removeFunction(index)" aria-label="移除函數">-</button>
         </div>
         <button @click="addFunction" :disabled="functions.length >= availableFunctions.length">+ 新增函數</button>
+      </div>
+
+      <!-- Agent 選擇部分 -->
+      <div class="section">
+        <h4>Agents</h4>
+        <div v-for="(agent, index) in agents" :key="index" class="agent-row">
+          <select v-model="agents[index]" @change="onAgentChange(index)">
+            <option value="">請選擇 Agent</option>
+            <option v-for="availableAgent in availableAgents" :key="availableAgent.id" :value="availableAgent.id">
+              {{ availableAgent.name }}
+            </option>
+          </select>
+          <button @click="removeAgent(index); log('Agent 已移除')" aria-label="移除 Agent">-</button>
+        </div>
+        <button @click="addAgent(); log('新 Agent 已添加')" :disabled="agents.length >= availableAgents.length">+ 新增 Agent</button>
       </div>
 
       <!-- 輸出參數部分 -->

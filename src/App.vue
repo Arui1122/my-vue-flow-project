@@ -4,7 +4,7 @@ import { Background } from '@vue-flow/background';
 import { Controls } from '@vue-flow/controls';
 import { MarkerType, VueFlow, useVueFlow } from '@vue-flow/core';
 import { MiniMap } from '@vue-flow/minimap';
-import { markRaw, onMounted, ref, watch } from 'vue';
+import { markRaw, onMounted, provide, ref, watch } from 'vue';
 import { useRoute } from 'vue-router';
 
 // 導入自定義節點組件
@@ -172,6 +172,9 @@ watch(
   }
 );
 
+// 提供 workflowId 给子组件
+provide('workflowId', workflowId);
+
 // 使用 VueFlow 鉤子
 const { onConnect, addNodes, addEdges, setNodes, setEdges, findNode, onEdgesChange } = useVueFlow();
 
@@ -320,7 +323,7 @@ const onInteractionChange = (interactionEnabled) => console.log('交互變更:',
       <Background pattern-color="#aaa" :gap="16" />
       <MiniMap />
       <Controls @zoom-in="onZoomIn" @zoom-out="onZoomOut" @fit-view="onFitView" @interaction-change="onInteractionChange" />
-      <SaveRestoreControls :flow-id="flowId" />
+      <SaveRestoreControls />
     </VueFlow>
     <Sidebar @addNode="onNodeAdded" />
   </div>

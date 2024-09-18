@@ -1,41 +1,23 @@
 <script setup>
 // 導入所需的組件和函數
 import { Panel, useVueFlow } from '@vue-flow/core';
-import { ref, watch } from 'vue';
+import { inject } from 'vue';
 
-// 定義 props
-const props = defineProps({
-  flowId: {
-    type: String,
-    default: null
-  }
-});
-
-// 定義一個用於 localStorage 的鍵名
-// const flowKey = 'vue-flow--save-restore'
+// 使用 inject 获取 workflowId
+const workflowId = inject('workflowId');
 
 // 從 useVueFlow 鉤子中獲取所需的函數和狀態
 const { nodes, edges, addNodes, toObject, fromObject } = useVueFlow()
-
-// 使用 ref 來跟踪 flowId
-const currentFlowId = ref(props.flowId);
-
-// 監聽 props 中 flowId 的變化
-watch(() => props.flowId, (newFlowId) => {
-  currentFlowId.value = newFlowId;
-});
-
-
 
 // 保存圖表到 localStorage 的函數
 async function onSave() {
   const flowObject = toObject();
   console.log('準備保存的圖表數據：', flowObject);
-  const url = currentFlowId.value
-    ? `http://localhost:8080/workflow/${currentFlowId.value}`
+  const url = workflowId.value
+    ? `http://localhost:8080/workflow/${workflowId.value}`
     : 'http://localhost:8080/workflow';
 
-  const method = currentFlowId.value ? 'PUT' : 'POST';
+  const method = workflowId.value ? 'PUT' : 'POST';
   // var data = JSON.stringify(flowObject);
   console.log(`保存的資料: ${JSON.stringify(flowObject)}`);
   try {
@@ -52,14 +34,6 @@ async function onSave() {
     }
 
     console.log(`保存成功: ${response.statusText}`);
-
-    // 如果是新建的工作流，從響應中獲取新的 flowId
-    if (!currentFlowId.value && response.headers.get("Location")) {
-      const newFlowId = response.headers.get("Location").split("/").pop();
-      currentFlowId.value = newFlowId;
-      console.log(`新的 flowId: ${newFlowId}`);
-      // 這裡可以添加更新 URL 的邏輯，如果需要的話
-    }
 
   } catch (error) {
     console.error('保存失敗：', error);
