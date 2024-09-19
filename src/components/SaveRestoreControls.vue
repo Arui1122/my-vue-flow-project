@@ -1,12 +1,11 @@
 <script setup>
-import.meta.env
 // 導入所需的組件和函數
 import { Panel, useVueFlow } from '@vue-flow/core';
 import { inject } from 'vue';
 
 // 獲取環境變量中的 API 基礎 URL
 const apiBaseUrl = import.meta.env.VITE_API_BASE_URL;
-console.log('API 基礎 URL:', apiBaseUrl); // 添加日志
+console.log('API 基礎 URL:', apiBaseUrl);
 
 // 使用 inject 获取 workflowId
 const workflowId = inject('workflowId');
