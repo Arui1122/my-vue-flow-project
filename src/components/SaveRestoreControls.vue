@@ -1,7 +1,12 @@
 <script setup>
+import.meta.env
 // 導入所需的組件和函數
 import { Panel, useVueFlow } from '@vue-flow/core';
 import { inject } from 'vue';
+
+// 獲取環境變量中的 API 基礎 URL
+const apiBaseUrl = import.meta.env.VITE_API_BASE_URL;
+console.log('API 基礎 URL:', apiBaseUrl); // 添加日志
 
 // 使用 inject 获取 workflowId
 const workflowId = inject('workflowId');
@@ -13,13 +18,17 @@ const { nodes, edges, addNodes, toObject, fromObject } = useVueFlow()
 async function onSave() {
   const flowObject = toObject();
   console.log('準備保存的圖表數據：', flowObject);
+  // 構建請求的 URL
   const url = workflowId.value
-    ? `http://localhost:8080/workflow/${workflowId.value}`
-    : 'http://localhost:8080/workflow';
-
+    ? `${apiBaseUrl}/workflow/${workflowId.value}`
+    : `${apiBaseUrl}/workflow`;
+  // 確定請求方法
   const method = workflowId.value ? 'PUT' : 'POST';
-  // var data = JSON.stringify(flowObject);
+
+  console.log(`請求 URL: ${url}`);
+  console.log(`請求方法: ${method}`);
   console.log(`保存的資料: ${JSON.stringify(flowObject)}`);
+
   try {
     const response = await fetch(url, {
       method: method,

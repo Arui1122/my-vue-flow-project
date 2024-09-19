@@ -1,4 +1,5 @@
 <script setup>
+// 引入 import.meta.env 以訪問環境變量
 // 導入必要的組件和函數
 import { Background } from '@vue-flow/background';
 import { Controls } from '@vue-flow/controls';
@@ -101,10 +102,11 @@ const edges = ref(defaultEdges);
 const fetchFlowData = async (workflowId) => {
   console.log('開始獲取流程數據, workflowId:', workflowId);
   if (workflowId) {
-    // flowId = '66dfc2358d08f42b113ddd45';
     try {
       console.log('從 API 獲取數據...');
-      const response = await fetch(`http://localhost:8080/workflow/${workflowId}`);
+      const apiBaseUrl = import.meta.env.VITE_API_BASE_URL;
+      console.log('API 基礎 URL:', apiBaseUrl);
+      const response = await fetch(`${apiBaseUrl}/workflow/${workflowId}`);
 
       if (!response.ok) {
         throw new Error(`HTTP 錯誤! 狀態: ${response.status}`);
