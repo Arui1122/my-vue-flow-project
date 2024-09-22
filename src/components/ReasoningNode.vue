@@ -51,7 +51,7 @@ const outputs = ref<OutputParam[]>(node.data.outputs || []);
 // 預定義的 Agent 列表
 const availableAgents = computed(() => [
   { id: 'agent1', name: 'java開發大師' },
-  { id: 'agent2', name: '雲端顧問' },
+  { id: 'cloud', name: '雲端顧問' },
   { id: 'agent3', name: 'Agent 3' },
 ]);
 
@@ -144,8 +144,8 @@ const log = (message: string) => {
 
     <!-- 節點標題和描述 -->
     <div class="node-header">
-      <h3>LLM ({{ node.id }}) </h3>
-      <p>呼叫大型語言模型，使用變量和提示詞生成回應。</p>
+      <h3>推理 ({{ node.id }}) </h3>
+      <p>根據狀況進行推理，並可使用 workflow 獲得精確資訊。</p>
     </div>
 
     <!-- 節點內容 -->
@@ -158,7 +158,6 @@ const log = (message: string) => {
         <select id="model-select" v-model="modelId">
           <option value="azure-openai-gpt-4o">Azure OpenAI GPT-4o</option>
           <option value="anthropic-claude-3-5-sonnet">Claude 3.5 Sonnet</option>
-          <option value="gemini-1.5-flash">Gemini 1.5 Flash</option>
           <option value="openai-gpt-4o">OpenAI GPT-4o</option>
         </select>
       </div>
@@ -203,7 +202,7 @@ const log = (message: string) => {
       </div>
 
       <!-- Agent 選擇部分 -->
-      <!-- <div class="section">
+      <div class="section">
         <h4>Workflow</h4>
         <div v-for="(agent, index) in agents" :key="index" class="agent-row">
           <select v-model="agents[index]" @change="onAgentChange(index)">
@@ -215,7 +214,7 @@ const log = (message: string) => {
           <button @click="removeAgent(index); log('Agent 已移除')" aria-label="移除 Agent">-</button>
         </div>
         <button @click="addAgent(); log('新 Agent 已添加')" :disabled="agents.length >= availableAgents.length">+ 新增 Workflow</button>
-      </div> -->
+      </div>
 
       <!-- 輸出參數部分 -->
       <!-- <div class="section">

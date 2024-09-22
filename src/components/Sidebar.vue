@@ -24,7 +24,7 @@ const addNode = (type) => {
   if (!(type in counters.value)) {
     counters.value[type] = 0;
   }
-  
+
   counters.value[type]++;
   const formattedCounter = String(counters.value[type]).padStart(3, '0');
   const newNode = {
@@ -40,6 +40,13 @@ const addNode = (type) => {
 const getInitialData = (type) => {
   switch (type) {
     case 'llm':
+      return {
+        modelId: 'openai-gpt-4o',
+        inputs: [],
+        prompt: '',
+        outputs: [],
+      };
+    case 'reasoning':
       return {
         modelId: 'openai-gpt-4o',
         inputs: [],
@@ -67,6 +74,7 @@ const getInitialData = (type) => {
 const addLLMNode = () => addNode('llm');
 const addKMNode = () => addNode('km');
 const addGatewayNode = () => addNode('gateway');
+const addReasoningNode = () => addNode('reasoning');
 
 </script>
 
@@ -84,6 +92,7 @@ const addGatewayNode = () => addNode('gateway');
 
       <!-- 添加 LLM (語言模型) 節點的按鈕 -->
       <button @click="addLLMNode">添加 LLM 節點</button>
+      <button @click="addReasoningNode">添加推理節點</button>
       <button @click="addKMNode">添加 KM 節點</button>
       <button @click="addGatewayNode">添加決策節點</button>
 
@@ -94,39 +103,57 @@ const addGatewayNode = () => addNode('gateway');
 <style scoped>
 /* 側邊欄的樣式 */
 aside {
-  position: absolute; /* 絕對定位 */
-  left: 0; /* 靠左對齊 */
-  top: 0; /* 靠上對齊 */
-  z-index: 4; /* 確保側邊欄顯示在其他元素之上 */
-  background-color: #f8f8f8; /* 淺灰色背景 */
-  padding: 15px; /* 內邊距 */
-  border-right: 1px solid #ddd; /* 右邊框 */
+  position: absolute;
+  /* 絕對定位 */
+  left: 0;
+  /* 靠左對齊 */
+  top: 0;
+  /* 靠上對齊 */
+  z-index: 4;
+  /* 確保側邊欄顯示在其他元素之上 */
+  background-color: #f8f8f8;
+  /* 淺灰色背景 */
+  padding: 15px;
+  /* 內邊距 */
+  border-right: 1px solid #ddd;
+  /* 右邊框 */
 }
 
 /* 說明文字的樣式 */
 .description {
-  font-size: 12px; /* 字體大小 */
-  margin-bottom: 10px; /* 下方留白 */
+  font-size: 12px;
+  /* 字體大小 */
+  margin-bottom: 10px;
+  /* 下方留白 */
 }
 
 /* 按鈕容器的樣式 */
 .buttons {
-  display: flex; /* 使用 flex 佈局 */
-  flex-direction: column; /* 按鈕垂直排列 */
+  display: flex;
+  /* 使用 flex 佈局 */
+  flex-direction: column;
+  /* 按鈕垂直排列 */
 }
 
 /* 按鈕的樣式 */
 button {
-  margin-bottom: 10px; /* 按鈕之間的間距 */
-  padding: 10px; /* 按鈕內部留白 */
-  border: 1px solid #1a192b; /* 邊框 */
-  border-radius: 3px; /* 圓角 */
-  cursor: pointer; /* 滑鼠指針變為手型 */
-  background-color: #fff; /* 白色背景 */
+  margin-bottom: 10px;
+  /* 按鈕之間的間距 */
+  padding: 10px;
+  /* 按鈕內部留白 */
+  border: 1px solid #1a192b;
+  /* 邊框 */
+  border-radius: 3px;
+  /* 圓角 */
+  cursor: pointer;
+  /* 滑鼠指針變為手型 */
+  background-color: #fff;
+  /* 白色背景 */
 }
 
 /* 滑鼠懸停在按鈕上時的樣式 */
 button:hover {
-  background-color: #f0f0f0; /* 滑鼠懸停時變為淺灰色 */
+  background-color: #f0f0f0;
+  /* 滑鼠懸停時變為淺灰色 */
 }
 </style>

@@ -16,6 +16,7 @@ import LLMNode from './components/LLMNode.vue';
 import SaveRestoreControls from './components/SaveRestoreControls.vue';
 import Sidebar from './components/Sidebar.vue';
 import StartNode from './components/StartNode.vue';
+import ReasoningNode from './components/ReasoningNode.vue';
 
 // 導入控制面板樣式
 import '@vue-flow/controls/dist/style.css';
@@ -29,6 +30,7 @@ const workflowId = ref(route.params.workflowId);
 const nodeTypes = {
   start: markRaw(StartNode),
   llm: markRaw(LLMNode),
+  reasoning: markRaw(ReasoningNode),
   km: markRaw(KMNode),
   gateway: markRaw(GatewayNode),
   end: markRaw(EndNode),
@@ -38,6 +40,7 @@ const nodeTypes = {
 const calculateMaxCounters = () => {
   const counters = {
     llm: 0,
+    reasoning: 0,
     km: 0,
     gateway: 0
     // 可以根據需要添加其他節點類型
@@ -63,6 +66,7 @@ const calculateMaxCounters = () => {
 // 新增：最大流水號的響應式引用
 const maxCounters = ref({
   llm: 0,
+  reasoning: 0,
   km: 0,
   gateway: 0
 });

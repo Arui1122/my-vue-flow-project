@@ -3,7 +3,7 @@ import { Handle, Position, useNode } from '@vue-flow/core';
 import { ref, watch } from 'vue';
 
 interface KMNodeData {
-  knowledge: string[];
+  knowledgeIds: string[];
   searchStrategy: string;
   maxRecalls: number;
   minMatchingDegree: number;
@@ -11,7 +11,7 @@ interface KMNodeData {
 
 const { node } = useNode<KMNodeData>();
 
-const knowledge = ref<string[]>(node.data.knowledge || ['test']);
+const knowledgeIds = ref<string[]>(node.data.knowledgeIds || ['test']);
 const searchStrategy = ref(node.data.searchStrategy || 'Semantics');
 const maxRecalls = ref(node.data.maxRecalls || 1);
 const minMatchingDegree = ref(node.data.minMatchingDegree || 0.5);
@@ -19,7 +19,7 @@ const minMatchingDegree = ref(node.data.minMatchingDegree || 0.5);
 const updateNodeData = () => {
   node.data = {
     ...node.data,
-    knowledge: knowledge.value,
+    knowledgeIds: knowledgeIds.value,
     searchStrategy: searchStrategy.value,
     maxRecalls: maxRecalls.value,
     minMatchingDegree: minMatchingDegree.value,
@@ -34,7 +34,7 @@ const removeKnowledge = (index: number) => {
   knowledge.value.splice(index, 1);
 };
 
-watch([knowledge, searchStrategy, maxRecalls, minMatchingDegree], updateNodeData, { deep: true });
+watch([knowledgeIds, searchStrategy, maxRecalls, minMatchingDegree], updateNodeData, { deep: true });
 </script>
 
 <template>
@@ -49,8 +49,8 @@ watch([knowledge, searchStrategy, maxRecalls, minMatchingDegree], updateNodeData
     <div class="node-content">
       <div class="section">
         <h4>Knowledge</h4>
-        <div v-for="(item, index) in knowledge" :key="index" class="input-row">
-          <input v-model="knowledge[index]" placeholder="Knowledge item">
+        <div v-for="(item, index) in knowledgeIds" :key="index" class="input-row">
+          <input v-model="knowledgeIds[index]" placeholder="Knowledge item">
           <button @click="removeKnowledge(index)" aria-label="Remove knowledge">-</button>
         </div>
         <button @click="addKnowledge">+ Add Knowledge</button>
